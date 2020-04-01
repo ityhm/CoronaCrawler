@@ -1,6 +1,4 @@
 import datetime
-from builtins import dict
-
 from spiders.CoronaSpider import CoronaSpider
 
 

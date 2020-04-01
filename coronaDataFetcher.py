@@ -19,7 +19,7 @@ print("Let's start scraping!")
 # s.scrape()
 
 process = CrawlerProcess()
-# process.crawl(WorldometersSpider)
+process.crawl(WorldometersSpider)
 process.crawl(WikipediaSpider)
 process.start()
 
