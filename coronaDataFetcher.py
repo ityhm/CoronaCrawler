@@ -2,6 +2,7 @@ from scrapy.crawler import CrawlerProcess
 from coronaDB import MyCoronaDB
 from seleniums.arcgisDashboardSelenium import ArcgisDashSeleniumScraper
 from seleniums.ynetSelenium import YnetSeleniumScraper
+from spiders.StatistaSpider import StatistaSpider
 from spiders.WorldmetersSpider import WorldometersSpider
 from spiders.WikipediaSpider import WikipediaSpider
 
@@ -21,9 +22,8 @@ print("Let's start scraping!")
 process = CrawlerProcess()
 process.crawl(WorldometersSpider)
 process.crawl(WikipediaSpider)
+process.crawl(StatistaSpider)
 process.start()
-
-
 
 db.print_db()
 db.close()
