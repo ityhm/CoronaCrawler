@@ -7,7 +7,7 @@ class WikipediaSpider(CoronaSpider):
     name = "Wikipedia Spider"
     start_urls = ['https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory']
 
-    def parse(self, response):
+    def corona_parse(self, response):
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # All data of Israel state

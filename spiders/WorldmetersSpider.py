@@ -7,7 +7,7 @@ class WorldometersSpider(CoronaSpider):
     name = "Worldmeters Spider"
     start_urls = ['https://www.worldometers.info/coronavirus/']
 
-    def parse(self, response):
+    def corona_parse(self, response):
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # All data of Israel state
