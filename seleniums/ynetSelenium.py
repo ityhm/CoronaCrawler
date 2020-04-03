@@ -10,13 +10,10 @@ class YnetSeleniumScraper(CoronaSeleniumScraper):
     source_html = "https://www.ynet.co.il"
 
     def get_data_from_element(self, browser):
-        try:
-            webElementIsraelData = WebDriverWait(browser, 8).until(
-                ec.presence_of_element_located((By.ID, "israel_sicks_counter")))
-        except ex:
-            print("Wait didn't work: " + ex)
+        web_element_israel_data = WebDriverWait(browser, 8).until(
+            ec.presence_of_element_located((By.ID, "israel_sicks_counter")))
 
         # The number of sick people in the first of <strong>
-        sick_israel = webElementIsraelData.text
+        sick_israel = web_element_israel_data.text
 
         return sick_israel.replace(',', '')

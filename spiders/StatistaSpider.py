@@ -7,7 +7,7 @@ class StatistaSpider(CoronaSpider):
     name = "Statista Spider"
     start_urls = ['https://www.statista.com/statistics/1043366/novel-coronavirus-2019ncov-cases-worldwide-by-country/']
 
-    def parse(self, response):
+    def corona_parse(self, response):
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # ['Israel', <sick>]

@@ -4,3 +4,4 @@ venv
 *.log
 *.html
 test.py
+Logs
