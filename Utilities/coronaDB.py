@@ -122,3 +122,10 @@ class MyCoronaDB:
         self.db_cursor.execute(sql)
         records = self.db_cursor.fetchall()
         self.print_records(records)
+
+
+    def delete_by_id(self, id):
+      print(f"\nDelete ID {id}\n")
+      sql = f"DELETE FROM {self.table_name} WHERE id = '{id}'"
+      self.db_cursor.execute(sql)
+      self.my_db.commit()

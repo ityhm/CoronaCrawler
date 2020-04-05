@@ -5,3 +5,4 @@ venv
 *.html
 test.py
 Logs
+/output.txt

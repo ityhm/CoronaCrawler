@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import scrapy
+from scrapy import Request
 
 from Utilities.Logger import log_if_data_empty, log_to_file
 from Utilities.coronaDB import MyCoronaDB
@@ -30,7 +31,9 @@ class CoronaSpider(ABC, scrapy.Spider):
             print(f"\nFailed to get data from website {self.source_name}\n")
             log_to_file(self.source_name, str(ex))
             return
-        pass
+
+        # if crawl again, parse again the same url
+        yield Request(response.url, callback=self.parse)
 
     def send_result(self, sick, date):
         if not log_if_data_empty(sick, self.source_name):
