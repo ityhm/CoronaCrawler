@@ -29,6 +29,7 @@ class CoronaSeleniumScraper(ABC):
 
     def scrape(self):
         browser = webdriver.Firefox()
+        browser.minimize_window()
         browser.get(self.source_html)
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

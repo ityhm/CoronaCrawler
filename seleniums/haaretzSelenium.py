@@ -15,5 +15,5 @@ class HaaretzSeleniumScraper(CoronaSeleniumScraper):
 
         # <span>num</span>
         sick_israel = web_element_israel_data.find_elements_by_xpath("./span")[0].text
-        print(sick_israel)
+
         return sick_israel.replace(',', '')
