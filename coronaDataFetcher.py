@@ -1,15 +1,19 @@
 from Utilities.Logger import print_flush, reset_log_info
 from Utilities.coronaDB import MyCoronaDB
+from seleniums.CNNSelenium import CNNSeleniumScraper
 from seleniums.arcgisDashboardSelenium import ArcgisDashSeleniumScraper
 from seleniums.calcalistSelenium import CalcalistSeleniumScraper
 from seleniums.haaretzSelenium import HaaretzSeleniumScraper
 from seleniums.ynetSelenium import YnetSeleniumScraper
+from spiders.AlJazeeraSpider import AlJazeeraSpider
+from spiders.BbcSpider import BbcSpider
 from spiders.ClalitSpider import ClalitSpider
 from spiders.MakoSpider import MakoSpider
 from spiders.StatistaSpider import StatistaSpider
 from spiders.WallaSpider import WallaSpider
 from spiders.WorldmetersSpider import WorldometersSpider
 from spiders.WikipediaSpider import WikipediaSpider
+from spiders.ynetSpider import YnetSpider
 from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
 from scrapy.utils.log import configure_logging
@@ -22,17 +26,20 @@ db = MyCoronaDB()
 
 
 def crawl_selenium_scrapers():
-    s = YnetSeleniumScraper()
+    s = ArcgisDashSeleniumScraper()
     s.scrape()
 
-    s = ArcgisDashSeleniumScraper()
+    s = CalcalistSeleniumScraper()
+    s.scrape()
+
+    s = CNNSeleniumScraper()
     s.scrape()
 
     s = HaaretzSeleniumScraper()
     s.scrape()
 
-    s = CalcalistSeleniumScraper()
-    s.scrape()
+    # s = YnetSeleniumScraper()
+    # s.scrape()
 
 
 def run_seleniums_once():
@@ -59,12 +66,15 @@ def crawl_spiders(runner):
     cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     print_flush(f"Let's start scraping SPIDERS! {cur_time}")
 
-    runner.crawl(WorldometersSpider)
-    runner.crawl(WikipediaSpider)
+    runner.crawl(AlJazeeraSpider)
+    runner.crawl(BbcSpider)
+    runner.crawl(ClalitSpider)
+    runner.crawl(MakoSpider)
     runner.crawl(StatistaSpider)
     runner.crawl(WallaSpider)
-    runner.crawl(MakoSpider)
-    runner.crawl(ClalitSpider)
+    runner.crawl(WikipediaSpider)
+    runner.crawl(WorldometersSpider)
+    runner.crawl(YnetSpider)
 
     db.print_db()
     cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")

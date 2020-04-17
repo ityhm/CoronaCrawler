@@ -9,6 +9,7 @@ from Utilities.coronaDB import MyCoronaDB
 # Abstract class for selenium scrapers
 class CoronaSeleniumScraper(ABC):
     db = None
+    MAX_TIME_WAIT_LOAD = 40     # Seconds
     selenium_log_file = f"{Logger.logs_dir}/geckodriver.log"
 
     @property
