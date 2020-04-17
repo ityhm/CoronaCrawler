@@ -1,8 +1,8 @@
+import datetime
 from abc import ABC, abstractmethod
 import scrapy
 from scrapy import Request
-
-from Utilities.Logger import log_if_data_empty, log_to_file
+from Utilities.Logger import log_if_data_empty, log_to_file, log_info_line
 from Utilities.coronaDB import MyCoronaDB
 
 
@@ -24,12 +24,21 @@ class CoronaSpider(ABC, scrapy.Spider):
     def corona_parse(self):
         pass
 
+    def custom_log(self, data):
+        log_info_line(f"{self.source_name} - {data.strip()}")
+
     def parse(self, response):
         try:
-            self.corona_parse(response)
+            self.custom_log("Starting crawling")
+            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            result = self.corona_parse(response)
+            self.send_result(result, date)
+
+            self.custom_log(f"Found: '{result}'")
+            self.custom_log("Finished crawling")
         except Exception as ex:
             print(f"\nFailed to get data from website {self.source_name}\n")
-            log_to_file(self.source_name, str(ex))
+            log_to_file(self.source_name, f"Error: {str(ex)}")
             return
 
         # if crawl again, parse again the same url

@@ -1,4 +1,4 @@
-from scrapy.crawler import CrawlerProcess
+from Utilities.Logger import print_flush, reset_log_info
 from Utilities.coronaDB import MyCoronaDB
 from seleniums.arcgisDashboardSelenium import ArcgisDashSeleniumScraper
 from seleniums.calcalistSelenium import CalcalistSeleniumScraper
@@ -15,10 +15,8 @@ from twisted.internet import reactor
 from scrapy.utils.log import configure_logging
 from scrapy.crawler import CrawlerRunner
 from multiprocessing import Process
-import sys
 import datetime
 from time import sleep
-
 
 db = MyCoronaDB()
 
@@ -39,28 +37,27 @@ def crawl_selenium_scrapers():
 
 def run_seleniums_once():
     cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    print(f"Let's start scraping SELENIUM! {cur_time}")
+    print_flush(f"Let's start scraping SELENIUM! {cur_time}")
 
     crawl_selenium_scrapers()
 
-    cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    print(f"FINISHED scraping SELENIUM! {cur_time}")
-
     db.print_db()
+
+    cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    print_flush(f"FINISHED scraping SELENIUM! {cur_time}")
 
 
 def run_seleniums_in_loops():
     while True:
         run_seleniums_once()
-        sys.stdout.flush()
 
-        # print(f"Finished! {current_time}")
+        # print_flush(f"Finished! {current_time}")
         sleep(60 * 10)
 
 
 def crawl_spiders(runner):
     cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    print(f"Let's start scraping SPIDERS! {cur_time}")
+    print_flush(f"Let's start scraping SPIDERS! {cur_time}")
 
     runner.crawl(WorldometersSpider)
     runner.crawl(WikipediaSpider)
@@ -69,11 +66,9 @@ def crawl_spiders(runner):
     runner.crawl(MakoSpider)
     runner.crawl(ClalitSpider)
 
-    cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    print(f"FINISHED scraping SPIDERS! {cur_time}")
-
     db.print_db()
-    sys.stdout.flush()
+    cur_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    print_flush(f"FINISHED scraping SPIDERS! {cur_time}")
 
 
 def crawl_spiders_once():
@@ -110,11 +105,12 @@ def loop_scraper():
         p1.join()
         p2.join()
 
-print("Welcome to the Corona Data Fetcher for Israel's sick counter")
+print_flush("Welcome to the Corona Data Fetcher for Israel's sick counter")
 # db.print_db()
 current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-print(f"Let's start scraping! {current_time}")
+print_flush(f"Let's start scraping! {current_time}")
 
+reset_log_info()
 loop_scraper()
 # one_time_scrape()
 
