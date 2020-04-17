@@ -1,9 +1,11 @@
 import mysql.connector
+from Utilities.Logger import print_flush
 
 
 class MyCoronaDB:
     db_name = 'coronaDB'
     table_name = 'coronaTable'
+    # table_name = 'practiceCoronaTable'
     my_db = ''
     db_cursor = []
 
@@ -30,57 +32,58 @@ class MyCoronaDB:
         self.db_cursor.execute("SHOW DATABASES")
 
         # If the DB doesn't exists in the given list (first index of each tuple in the list)
-        if ([item[0] for item in self.db_cursor].count(self.db_name) == 0):
-            print("Create DB " + self.db_name)
+        if [item[0] for item in self.db_cursor].count(self.db_name) == 0:
+            print_flush(f"Create DB {self.db_name}")
             self.db_cursor.execute("CREATE DATABASE " + self.db_name)
         else:
-          pass
-          #print("DB " + self.db_name + " exists")
+            pass
+            # print_flush(f"DB {self.db_name} exists")
 
         # Put a list of tuples [(<Table Name>, <>), ...]
         self.db_cursor.execute("SHOW TABLES")
 
         # If table doesn't exist, create it
-        if ([item[0] for item in self.db_cursor].count(self.table_name) == 0):
-          print("Create Table " + self.table_name)
-          self.db_cursor.execute(self.CREATE_TABLE_STR)
+        if [item[0] for item in self.db_cursor].count(self.table_name) == 0:
+            print_flush(f"Create Table {self.table_name}")
+            self.db_cursor.execute(self.CREATE_TABLE_STR)
         else:
-          pass
-          # print("Table " + self.table_name + " exists")
+            pass
+            # print_flush(f"Table {self.table_name} exists")
 
     def close(self):
-        # print("Close DB")
+        # print_flush("Close DB")
         self.db_cursor.close()
         self.my_db.close()
 
     def print_records(self, records):
-      # print records
-      for row in records:
-        print(", ".join(map(str, row)))
+        # print records
+        for row in records:
+            print_flush(", ".join(map(str, row)))
 
-      print()
+        print_flush()
 
     def print_db(self):
-        print("Table " + self.table_name + ":")
+        print_flush(f"Table {self.table_name}:")
         # get all records from table
-        self.db_cursor.execute("SELECT * from " + self.table_name)
+        self.db_cursor.execute(f"SELECT * from {self.table_name}")
         records = self.db_cursor.fetchall()
-        # print("There are ", len(records), " records")
+        # print_flush(f"There are ", len(records), " records")
 
         # print columns names
         print(*[i[0].upper() for i in self.db_cursor.description])
+        print_flush()
 
         self.print_records(records)
 
     def print_columns(self):
-      self.db_cursor.execute("SELECT * from " + self.table_name)
-      records = self.db_cursor.fetchall()
-      print("There are ", len(records), " records")
-      print(*[i[0] for i in self.db_cursor.description])
+        self.db_cursor.execute("SELECT * from " + self.table_name)
+        records = self.db_cursor.fetchall()
+        print_flush(f"There are {len(records)} records")
+        print(*[i[0] for i in self.db_cursor.description])
 
     def insert_record(self, source, sick, date):
         if self.check_if_record_exists(source, sick, date):
-            print("\nRecord ({}, {}) exists already\n".format(source, sick))
+            print_flush(f"\nRecord ({source}, {sick}) exists already\n")
         else:
             sql = "INSERT INTO " + self.table_name + " (source, sick, date) VALUES (%s, %s, %s)"
             val = (source, sick, date)
@@ -93,19 +96,19 @@ class MyCoronaDB:
         return len(self.db_cursor.fetchall()) > 0
 
     def reset_table(self):
-      print("\nReset table\n")
-      sql = "DROP TABLE " + self.table_name
-      self.db_cursor.execute(sql)
-      self.db_cursor.execute(self.CREATE_TABLE_STR)
+        print_flush("\nReset table\n")
+        sql = "DROP TABLE " + self.table_name
+        self.db_cursor.execute(sql)
+        self.db_cursor.execute(self.CREATE_TABLE_STR)
 
     def delete_all_table(self):
-      print("\nDelete all table\n")
-      sql = "DELETE FROM " + self.table_name
-      self.db_cursor.execute(sql)
-      self.my_db.commit()
+        print_flush("\nDelete all table\n")
+        sql = "DELETE FROM " + self.table_name
+        self.db_cursor.execute(sql)
+        self.my_db.commit()
 
     def get_last_record_date(self):
-        sql = "SELECT MAX(date) FROM %s" % (self.table_name)
+        sql = "SELECT MAX(date) FROM %s" % self.table_name
         self.db_cursor.execute(sql)
         result = self.db_cursor.fetchone()
         date = None
@@ -113,7 +116,7 @@ class MyCoronaDB:
         if ((result is not None) and len(result)) > 0:
             date = str(result[0])
         else:
-            print("Table is empty! Can't return last record's date")
+            print_flush("Table is empty! Can't return last record's date")
 
         return date
 
@@ -123,9 +126,8 @@ class MyCoronaDB:
         records = self.db_cursor.fetchall()
         self.print_records(records)
 
-
-    def delete_by_id(self, id):
-      print(f"\nDelete ID {id}\n")
-      sql = f"DELETE FROM {self.table_name} WHERE id = '{id}'"
-      self.db_cursor.execute(sql)
-      self.my_db.commit()
+    def delete_by_id(self, el_id):
+        print_flush(f"\nDelete ID {el_id}\n")
+        sql = f"DELETE FROM {self.table_name} WHERE id = '{el_id}'"
+        self.db_cursor.execute(sql)
+        self.my_db.commit()
