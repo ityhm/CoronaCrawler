@@ -98,6 +98,11 @@ def one_time_scrape():
     run_seleniums_once()
 
 
+def scrape_all_for_loop(runner):
+    crawl_spiders(runner)
+    run_seleniums_once()
+
+
 def crawl_spiders_in_loop():
     configure_logging()
     runner = CrawlerRunner()
@@ -115,13 +120,23 @@ def loop_scraper():
         p1.join()
         p2.join()
 
+
+def scrape_loop_together():
+    configure_logging()
+    runner = CrawlerRunner()
+    task = LoopingCall(lambda: scrape_all_for_loop(runner))
+    task.start(60 * 20)
+    reactor.run()
+
+
 print_flush("Welcome to the Corona Data Fetcher for Israel's sick counter")
 # db.print_db()
 current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 print_flush(f"Let's start scraping! {current_time}")
 
 reset_log_info()
-loop_scraper()
+scrape_loop_together()
+# loop_scraper()
 # one_time_scrape()
 
 db.print_db()
