@@ -10,7 +10,7 @@ class CalcalistSeleniumScraper(CoronaSeleniumScraper):
     source_html = "https://newmedia.calcalist.co.il/data_journalism/corona/index.html"
 
     def get_data_from_element(self, browser):
-        web_element_israel_data = WebDriverWait(browser, 12).until(
+        web_element_israel_data = WebDriverWait(browser, self.MAX_TIME_WAIT_LOAD).until(
             ec.presence_of_element_located((By.CLASS_NAME, "datafield_israel_sick")))
 
         sick_israel = web_element_israel_data.text
