@@ -22,5 +22,5 @@ class HaaretzSeleniumScraper(CoronaSeleniumScraper):
         return sick_israel.replace(',', '')
 
 
-s = HaaretzSeleniumScraper()
-s.scrape()
+# s = HaaretzSeleniumScraper()
+# s.scrape()
