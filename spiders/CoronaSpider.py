@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import scrapy
 from scrapy import Request
 from Utilities import Logger
-from Utilities.Logger import log_if_data_empty, log_to_file, log_info_line, spider_save_source_to_file
+from Utilities.Logger import log_if_data_empty, log_to_file, log_info_line, write_file
 from Utilities.coronaDB import MyCoronaDB
 
 
@@ -28,7 +28,7 @@ class CoronaSpider(ABC, scrapy.Spider):
         log_info_line(f"{self.source_name} - {data.strip()}")
 
     def save_source_page(self, html_body):
-        spider_save_source_to_file(html_body, f"{Logger.html_dir}/{self.source_name}.html")
+        write_file(html_body, f"{Logger.html_dir}/{self.source_name}.html")
 
     def parse(self, response):
         try:

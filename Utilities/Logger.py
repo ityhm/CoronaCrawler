@@ -10,10 +10,11 @@ info_file = f"{logs_dir}/log_success.txt"
 # Creates log files in folder "Logs"
 def log_to_file(name, data, info="ERROR"):
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    file_name = f"{current_time}-{name}-{info}"
-    log_file = open(f"{logs_dir}/{file_name}", "w")
-    log_file.write(f"{data}\n\n{traceback.format_exc()}")
-    log_file.close()
+    file_name = f"{logs_dir}/{current_time}-{name}-{info}"
+    data = f"{data}\n\n{traceback.format_exc()}"
+
+    write_file(file_name, data)
+
     print_flush(f"Log written to {file_name}")
 
 
@@ -45,19 +46,12 @@ def reset_log_info():
     f.close()
 
 
-def selenium_save_source_to_file(browser, file_name):
-    f = open(file_name, "w")
-    f.write(browser.page_source)
-    f.close()
-
-
-def spider_save_source_to_file(html_body, file_name):
-    f = open(file_name, "w")
-    f.write(html_body)
-    f.close()
-
-
 def print_flush(string=""):
     print(string)
     sys.stdout.flush()
+
+
+def write_file(file_name, data):
+    with open(file_name, "w") as f:
+        f.write(data)
 
