@@ -4,6 +4,8 @@ venv
 *.log
 *.html
 test.py
-Logs
 /output.txt
-htmls
+Logs/*
+!Logs/.gitkeep
+htmls/*
+!htmls/.gitkeep
