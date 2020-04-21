@@ -51,6 +51,12 @@ def selenium_save_source_to_file(browser, file_name):
     f.close()
 
 
+def spider_save_source_to_file(html_body, file_name):
+    f = open(file_name, "w")
+    f.write(html_body)
+    f.close()
+
+
 def print_flush(string=""):
     print(string)
     sys.stdout.flush()

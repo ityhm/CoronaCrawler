@@ -59,14 +59,15 @@ class CoronaSeleniumScraper(ABC):
 
             if sick_israel is None or sick_israel == "":
                 self.handle_error(browser, "Result is empty string")
+            else:
+                browser.quit()
+                result_string = f"Found: '{sick_israel}'"
+
+                self.custom_log(result_string)
+                self.custom_log("Finished scrape")
+
+                self.insert_data_to_db(sick_israel, current_time)
         except Exception as ex:
             self.handle_error(browser, str(ex))
             return
 
-        browser.quit()
-        result_string = f"Found: '{sick_israel}'"
-
-        self.custom_log(result_string)
-        self.custom_log("Finished scrape")
-
-        self.insert_data_to_db(sick_israel, current_time)
