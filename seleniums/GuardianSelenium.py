@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from Utilities.Logger import print_flush, selenium_save_source_to_file
+from Utilities.Logger import print_flush, write_file
 from seleniums.coronaSeleniumScraper import CoronaSeleniumScraper
 
 
@@ -17,13 +17,13 @@ class GuardianScraper(CoronaSeleniumScraper):
         # web_element_israel_data = WebDriverWait(browser, self.MAX_TIME_WAIT_LOAD).until(ec.frame_to_be_available_and_switch_to_it((By.CLASS_NAME, "interactive-atom-fence")))
         # print("FOUND!")
 
-        # selenium_save_source_to_file(browser, "Guardian3.html")
+        # write_file(browser.page_source, "Guardian3.html")
         # web_element_israel_data = WebDriverWait(browser, 12).until(
         #         ec.presence_of_element_located((By.ID, "coronavirus-emea-map-svg")))
         sleep(30)
-        selenium_save_source_to_file(browser, "Guardian2.html")
+        write_file(browser.page_source, "Guardian2.html")
         #
-        # selenium_save_source_to_file(browser, "Guardian.html")
+        # write_file(.page_source, "Guardian.html")
         # <tr data-name="Israel" data-cases="9248" data-deaths="65">
         # ...
         # </tr>

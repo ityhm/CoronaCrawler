@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from selenium import webdriver
 import datetime
 from Utilities import Logger
-from Utilities.Logger import log_if_data_empty, log_to_file, print_flush, selenium_save_source_to_file, log_info_line
+from Utilities.Logger import log_if_data_empty, log_to_file, print_flush, log_info_line, \
+    write_file
 from Utilities.coronaDB import MyCoronaDB
 
 
@@ -30,7 +31,8 @@ class CoronaSeleniumScraper(ABC):
         log_info_line(f"{self.source_name} - {data.strip()}")
 
     def save_source_page(self, browser):
-        selenium_save_source_to_file(browser, f"{Logger.html_dir}/{self.source_name}.html")
+        file_name = f"{Logger.html_dir}/{self.source_name}.html"
+        write_file(browser.page_source, file_name)
 
     def insert_data_to_db(self, sick_israel, current_time):
         if not log_if_data_empty(sick_israel, self.source_name):
@@ -59,14 +61,15 @@ class CoronaSeleniumScraper(ABC):
 
             if sick_israel is None or sick_israel == "":
                 self.handle_error(browser, "Result is empty string")
+            else:
+                browser.quit()
+                result_string = f"Found: '{sick_israel}'"
+
+                self.custom_log(result_string)
+                self.custom_log("Finished scrape")
+
+                self.insert_data_to_db(sick_israel, current_time)
         except Exception as ex:
             self.handle_error(browser, str(ex))
             return
 
-        browser.quit()
-        result_string = f"Found: '{sick_israel}'"
-
-        self.custom_log(result_string)
-        self.custom_log("Finished scrape")
-
-        self.insert_data_to_db(sick_israel, current_time)
