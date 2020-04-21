@@ -1,4 +1,7 @@
 import datetime
+
+from scrapy.crawler import CrawlerProcess
+
 from spiders.CoronaSpider import CoronaSpider
 
 
@@ -11,8 +14,12 @@ class BbcSpider(CoronaSpider):
         # All data of Israel state
         # <h3>Israel - 9,006 cases, 60 deaths</h3>
         israel_data = response.xpath('//tbody/tr[td[contains(text(), "Israel")]]'
-                                     '/td[contains(@class, "core__value")]/text()').getall()
+                                     '/td[contains(@class, "c__c c__c--t")]/text()').getall()
         sick_israel = str(israel_data[0].strip().replace(',', ''))
 
         return sick_israel
 
+
+# process = CrawlerProcess()
+# process.crawl(BbcSpider)
+# process.start()
