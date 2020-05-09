@@ -22,8 +22,6 @@ from multiprocessing import Process
 import datetime
 from time import sleep
 
-db = MyCoronaDB()
-
 
 def crawl_selenium_scrapers():
     s = ArcgisDashSeleniumScraper()
@@ -134,6 +132,7 @@ print_flush("Welcome to the Corona Data Fetcher for Israel's sick counter")
 current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 print_flush(f"Let's start scraping! {current_time}")
 
+db = MyCoronaDB()
 reset_log_info()
 scrape_loop_together()
 # loop_scraper()
