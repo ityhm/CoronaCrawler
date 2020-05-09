@@ -11,7 +11,7 @@ class HaaretzSeleniumScraper(CoronaSeleniumScraper):
 
     def get_data_from_element(self, browser):
         web_element_israel_data = WebDriverWait(browser, self.MAX_TIME_WAIT_LOAD).until(
-            ec.presence_of_element_located((By.CLASS_NAME, "corona-israel-sick")))
+            ec.presence_of_element_located((By.CLASS_NAME, "corona-israel-infected")))
 
         # In case text is not loaded yet inside <span></span>
         # WebDriverWait(browser, self.MAX_TIME_WAIT_LOAD)\

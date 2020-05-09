@@ -12,7 +12,7 @@ class ClalitSpider(CoronaSpider):
 
     def corona_parse(self, response):
         # All data of Israel state
-        israel_data = response.xpath('//tr[td[span[strong[text()[contains(.,"ישראל")]]]]]/td/span/span/text()').getall()
+        israel_data = response.xpath('//tr[td[span[strong[text()[contains(.,"ישראל")]]]]]/td/span/text()').getall()
         
         # The first cell is the number of sick people
         sick_israel = str(israel_data[0].replace(',', ''))
