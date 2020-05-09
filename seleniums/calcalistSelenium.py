@@ -11,8 +11,12 @@ class CalcalistSeleniumScraper(CoronaSeleniumScraper):
 
     def get_data_from_element(self, browser):
         web_element_israel_data = WebDriverWait(browser, self.MAX_TIME_WAIT_LOAD).until(
-            ec.presence_of_element_located((By.CLASS_NAME, "datafield_israel_sick")))
+            ec.presence_of_element_located((By.CLASS_NAME, "cases")))
 
         sick_israel = web_element_israel_data.text
 
         return sick_israel.replace(',', '')
+
+
+# s = CalcalistSeleniumScraper()
+# s.scrape()
