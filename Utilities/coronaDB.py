@@ -1,5 +1,5 @@
 import mysql.connector
-from Utilities.Logger import print_flush
+from Utilities.Logger import print_flush, log_to_file
 
 
 class MyCoronaDB:
@@ -85,10 +85,18 @@ class MyCoronaDB:
         if self.check_if_record_exists(source, sick, date):
             print_flush(f"\nRecord ({source}, {sick}) exists already\n")
         else:
-            sql = "INSERT INTO " + self.table_name + " (source, sick, date) VALUES (%s, %s, %s)"
-            val = (source, sick, date)
-            self.db_cursor.execute(sql, val)
-            self.my_db.commit()
+            last_sick_by_source = self.get_last_sick_by_source(source)
+            if int(sick) < int(last_sick_by_source):
+                msg = f"Error! Source '{source} has higher sick value ({last_sick_by_source}) in the db. " \
+                      f"Tried to insert {sick}."
+                print_flush(msg)
+                log_to_file(source, msg)
+                raise Exception(msg)
+            else:
+                sql = "INSERT INTO " + self.table_name + " (source, sick, date) VALUES (%s, %s, %s)"
+                val = (source, sick, date)
+                self.db_cursor.execute(sql, val)
+                self.my_db.commit()
 
     def check_if_record_exists(self, source, sick, date):
         sql = "SELECT * FROM %s WHERE source = '%s' AND sick = '%s'" % (self.table_name, source, sick)
@@ -119,6 +127,46 @@ class MyCoronaDB:
             print_flush("Table is empty! Can't return last record's date")
 
         return date
+
+    def get_last_sick_by_source(self, source):
+        max_id = self.get_max_id_by_source(source)
+        sql = f"SELECT sick FROM {self.table_name} WHERE id='{max_id}'"
+        self.db_cursor.execute(sql)
+        result = self.db_cursor.fetchone()
+        last_sick = None
+
+        if ((result is not None) and len(result)) > 0:
+            last_sick = str(result[0])
+        else:
+            print_flush("Table is empty! Can't return last record's date")
+
+        return last_sick
+
+    def get_highest_sick_by_source(self, source):
+        sql = f"SELECT MAX(sick) FROM {self.table_name} WHERE source='{source}'"
+        self.db_cursor.execute(sql)
+        result = self.db_cursor.fetchone()
+        highest_sick = None
+
+        if ((result is not None) and len(result)) > 0:
+            highest_sick = str(result[0])
+        else:
+            print_flush("Table is empty! Can't return last record's date")
+
+        return highest_sick
+
+    def get_max_id_by_source(self, source):
+        sql = f"SELECT MAX(id)FROM {self.table_name} WHERE source='{source}'"
+        self.db_cursor.execute(sql)
+        result = self.db_cursor.fetchone()
+        max_id = None
+
+        if ((result is not None) and len(result)) > 0:
+            max_id = int(result[0])
+        else:
+            print_flush("Table is empty! Can't return last record's date")
+
+        return max_id
 
     def print_all_after_date_including(self, date):
         sql = f"SELECT * FROM {self.table_name} WHERE date >= '{date}'"
